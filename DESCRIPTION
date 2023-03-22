@@ -11,8 +11,6 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
-    ade4,
-    adegraphics,
     dplyr,
     ggplot2,
     ggrepel,
@@ -24,6 +22,8 @@ Imports:
     tidyr
 RoxygenNote: 7.2.3
 Suggests: 
+    ade4,
+    adegraphics,
     knitr,
     rmarkdown
 VignetteBuilder: knitr

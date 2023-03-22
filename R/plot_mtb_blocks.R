@@ -9,8 +9,8 @@
 #' @import patchwork
 #' @importFrom ggplot2 ggtitle
 plot_mtb_blocks <- function(Xs, Y){
-  Xs_vars <- blocks_and_variables(Xs)
-  Y_vars <- blocks_and_variables(Y)
+  Xs_vars <- .blocks_and_variables_from_list(Xs)
+  Y_vars <- .blocks_and_variables_from_list(Y)
   g_Xs <- .plot_mtb_blocks(Xs_vars) + ggtitle("Explanatory\nvariables")
   g_Y <- .plot_mtb_blocks(Y_vars) + ggtitle("Response\nvariables")
   g_Xs + g_Y + plot_layout(widths = c(nrow(Xs_vars), nrow(Y_vars)))

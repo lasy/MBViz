@@ -73,7 +73,7 @@ get_mtb_blocks <- function(blocks) {
         factor(., levels = names(blocks) %>% str_replace(" ","\n")),
       name =
         name %>%
-        factor(., levels = blocks_and_variables(blocks)$variable %>% levels())
+        factor(., levels = .blocks_and_variables_from_list(blocks)$variable %>% levels())
     )
 }
 

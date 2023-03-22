@@ -9,8 +9,6 @@ plot_mtb_Xloadings(res, input_var, xaxis = 1, yaxis = 2, scale_axes = "eig")
 \arguments{
 \item{res}{the output of `ade4::mbpls` or `ade4::mbpcaiv`}
 
-\item{input_var}{a `data.frame` xxxx}
-
 \item{xaxis}{an `integer` specifying which latent variable should be plotted on the x-axis. Default is 1.}
 
 \item{yaxis}{an `integer` specifying which latent variable should be plotted on the y-axis. Default is 1.}

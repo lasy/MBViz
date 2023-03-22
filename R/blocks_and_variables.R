@@ -21,11 +21,12 @@ blocks_and_variables <- function(res) {
 #' @param inputs a list of matrices or data.frames
 #'
 #' @return a `tibble`
+#' @keywords internal
 #'
 #' @importFrom purrr map_dfr
 #' @importFrom dplyr tibble mutate
 #' @importFrom magrittr %>%
-blocks_and_variables_deprecated <- function(inputs) {
+.blocks_and_variables_from_list <- function(inputs) {
   map_dfr(
     .x = names(inputs),
     .f = function(input, inputs){
