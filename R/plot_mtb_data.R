@@ -1,66 +1,85 @@
 
 
-plot_mtb_data <- function(inputs, output){
-  
-  j <- 
-    apply(output[[1]], 1, function(x) weighted.mean(seq_along(x), x)) %>% 
+#' Plot the explanatory and response variables
+#'
+#' @param Xs a `list` with the explanatory blocks
+#' @param Y a single element `list` with the response block
+#'
+#' @return a `patchwork` of `ggplot2` object
+#' @export
+#'
+#' @import ggplot2
+#' @import patchwork
+#' @importFrom stats weighted.mean
+plot_mtb_data <- function(Xs, Y){
+
+  j <-
+    apply(Y[[1]], 1, function(x) weighted.mean(seq_along(x), x)) %>%
     order(., decreasing = TRUE)
-  id_sort <- rownames(output[[1]])[j]
-  
-  inputs_long <- get_mtb_blocks(inputs)
-  output_long <- get_mtb_blocks(output)
-  
-  max <- max(abs(c(inputs_long$value, output_long$value))) %>% ceiling()
-  
-  g_inputs <- 
-    plot_mtb_block_data(df = inputs_long, max = max, id_sort = id_sort) + 
-    ggtitle("Inputs") +
+  id_sort <- rownames(Y[[1]])[j]
+
+  Xs_long <- get_mtb_blocks(Xs)
+  Y_long <- get_mtb_blocks(Y)
+
+  max <- max(abs(c(Xs_long$value, Y_long$value))) %>% ceiling()
+
+  g_inputs <-
+    plot_mtb_block_data(df = Xs_long, max = max, id_sort = id_sort) +
+    ggtitle("Explanatory\nvariables") +
     theme(
       panel.border = element_blank(),
       strip.text = element_text(color = "black")
     )
-  g_output <- 
-    plot_mtb_block_data(df = output_long, max = max, id_sort = id_sort) + 
-    ggtitle("Output") +
+  g_output <-
+    plot_mtb_block_data(df = Y_long, max = max, id_sort = id_sort) +
+    ggtitle("Response\nvariables") +
     theme(
       panel.border = element_blank(),
       strip.text = element_text(color = "black")
     )
-  
-  g_inputs + g_output + 
+
+  g_inputs + g_output +
     plot_layout(
-      widths = c(lengths(inputs) %>% sum, lengths(output) %>% sum), 
+      widths = c(lengths(Xs) %>% sum, lengths(Y) %>% sum),
       guides = "collect"
     )
 }
 
 
+#' Extract block data into long format
+#'
+#' @param blocks
+#'
+#' @return a `tibble`
+#' @keywords internal
+#' @importFrom purrr map_dfr
+#' @importFrom stringr str_replace
 get_mtb_blocks <- function(blocks) {
-  
+
   purrr::map_dfr(
     .x = seq_along(blocks),
     .f = function(i, blocks) {
-      blocks[[i]] %>% 
-        scale() %>% 
-        as_tibble() %>% 
-        mutate(id = rownames(blocks[[i]]), block = names(blocks)[i]) %>% 
+      blocks[[i]] %>%
+        scale() %>%
+        as_tibble() %>%
+        mutate(id = rownames(blocks[[i]]), block = names(blocks)[i]) %>%
         pivot_longer(cols = -c(id, block))
     },
     blocks = blocks
-  ) %>% 
+  ) %>%
     mutate(
-      block = 
-        block %>% str_replace(" ","\n") %>% 
+      block =
+        block %>% str_replace(" ","\n") %>%
         factor(., levels = names(blocks) %>% str_replace(" ","\n")),
-      name = 
-        name %>% 
-        factor(., levels = get_block_data(blocks)$variable %>% levels())
+      name =
+        name %>%
+        factor(., levels = blocks_and_variables(blocks)$variable %>% levels())
     )
 }
 
 plot_mtb_block_data <- function(df, max, id_sort) {
-  
-  ggplot(df %>% mutate(id = id %>% factor(., levels = id_sort)), 
+
+  ggplot(df %>% mutate(id = id %>% factor(., levels = id_sort)),
          aes(x = name, y = id, fill = value)) +
     geom_tile() +
     xlab("") +

@@ -1,8 +1,7 @@
 
-#' Plot the projections of the input variable onto the latent space
+#' Plot the variables loading
 #'
 #' @param res the output of `ade4::mbpls` or `ade4::mbpcaiv`
-#' @param input_var a `data.frame` xxxx
 #' @param xaxis an `integer` specifying which latent variable should be plotted on the x-axis. Default is 1.
 #' @param yaxis an `integer` specifying which latent variable should be plotted on the y-axis. Default is 1.
 #' @param scale_axes how the aspect ratio between the x-axis and y-axis should be computed (default is "fixed", other option is "eig"). XXX explain better XXX
@@ -13,6 +12,8 @@
 #' @import  ggplot2
 #' @importFrom dplyr as_tibble mutate left_join join_by
 plot_mtb_Xloadings <- function(res, input_var, xaxis = 1, yaxis = 2, scale_axes = "eig"){
+
+  input_var <- blocks_and_variables(res)
 
   faX <-
     res$faX %>%
@@ -41,7 +42,7 @@ plot_mtb_Xloadings <- function(res, input_var, xaxis = 1, yaxis = 2, scale_axes 
       arrow = arrow(ends = "first", type = "closed", length = unit(10,"pt"))
     ) +
     geom_label_repel(aes(label = variable), min.segment.length = 1, size = 3)  +
-    xlab(str_c('Ax',xaxis)) +
-    ylab(str_c("Ax", yaxis))
+    xlab(str_c('Axis ',xaxis)) +
+    ylab(str_c("Axis ", yaxis))
 
 }

@@ -1,0 +1,104 @@
+---
+title: "MBViz demo"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{MBViz demo}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(MBViz)
+library(ade4)
+library(adegraphics)
+library(ggplot2)
+theme_set(theme_light())
+```
+
+
+```{r}
+data("chickenk")
+
+```
+
+```{r}
+Y <- chickenk[1] # Mortality
+Xs <- chickenk[2:5]
+plot_mtb_blocks(Xs = Xs , Y = Y)
+```
+
+```{r}
+plot_mtb_data(Xs = Xs, Y = Y)
+```
+
+```{r}
+
+res <- 
+  mbpls(
+    dudiY = dudi.pca(Y$Mortality, scannf = FALSE, nf = 2),
+    ktabX = ktab.list.df(Xs),
+    scale = TRUE,
+    scannf = FALSE, nf = 4
+    )
+
+```
+
+
+We can plot the results with the `adegraphics` `plot` function:
+
+```{r}
+
+plot(res)
+
+```
+
+Or use the `MBViz` functions that allow customization.
+
+```{r}
+
+plot_mtb_eig(res)
+
+```
+
+```{r}
+
+plot_mtb_lX(res) 
+# plot_mtb_lX(res, samples_color = Y$Mortality/rowSums(Y$Mortality)
+# plot_mtb_lX(res, samples_color = sample(c(1,2), size = res$lw %>% sum(), replace = TRUE))
+
+```
+
+```{r}
+
+plot_mtb_Y(res)
+# plot_mtb_Y(res, samples_color = Y$Mortality/rowSums(Y$Mortality))
+# BUGGY plot_mtb_Y(res, samples_color = sample(c(1,2), size = res$lw %>% sum(), replace = TRUE))
+
+```
+
+```{r}
+
+plot_mtb_cov(res)
+
+```
+
+
+```{r}
+
+plot_mtb_Xloadings(res)
+
+```
+
+```{r}
+
+plot_mtb(res)
+
+```
+

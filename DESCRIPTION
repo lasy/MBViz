@@ -1,18 +1,29 @@
 Package: MBViz
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Visualization functions for various multiblock methods
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Laura Symul
+Maintainer: Laura Symul <laurasymul@pm.me>
+Description: Visualization functions for various multiblock methods.
+   Visualization functions rely on the `ggplot2` package, making them customizable
+   by users.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
+    ade4,
+    adegraphics,
     dplyr,
     ggplot2,
+    ggrepel,
     magrittr,
     patchwork,
-    purrr
+    purrr,
+    stats,
+    stringr,
+    tidyr
 RoxygenNote: 7.2.3
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
