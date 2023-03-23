@@ -2,9 +2,12 @@
 #' Plots the eigenvalues and the cummulative projected inertia
 #'
 #' @param res the output of `ade4::mbpls` or `ade4::mbpcaiv`
-#' @param xaxis (optional) an `integer` specifying which latent variable to highlight
-#' @param yaxis (optional) an `integer` specifying which latent variable should be plotted on the y-axis. Default is 1.
-
+#' @param xaxis (optional) an `integer` specifying which latent variable to highlight. Default is `NULL`
+#' @param yaxis (optional) an `integer` specifying which latent variable to highlight. Default is `NULL`
+#' @param annot (optional) a `logical` specifying if an annotation with the total
+#' cumulative inertia should be added to the plot. Default is `TRUE`.
+#' @param title (optional) a `character` for the plot title. Default is `NULL`.
+#'
 #'
 #' @return a `ggplot2` object
 #' @export
@@ -13,7 +16,7 @@
 #' @importFrom stringr str_c
 #' @import ggplot2
 #' @import patchwork
-plot_mtb_eig <- function(res, xaxis = NULL, yaxis = NULL, annot = TRUE){
+plot_mtb_eig <- function(res, xaxis = NULL, yaxis = NULL, annot = TRUE, title = NULL){
 
   eigenvalues <-
     get_mtb_eig(res) %>%
@@ -63,6 +66,10 @@ plot_mtb_eig <- function(res, xaxis = NULL, yaxis = NULL, annot = TRUE){
         x = 0.51, y = tot_cum_var + 2, label = str_c(round(tot_cum_var),"%"),
         hjust = 0, vjust = 0, col = "gray30"
       )
+  }
+
+  if (!is.null(title)) {
+    g_eig <- g_eig + ggtitle(title)
   }
 
   g_eig + g_cum_var
