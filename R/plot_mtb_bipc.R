@@ -53,9 +53,7 @@ plot_mtb_bipc <- function(boot, input_var, show_dist = FALSE, CI = 0.95) {
     xlab("") +
     ylab("Cummulative\nBlock Importance") +
     scale_y_continuous(expand = expansion(mult = c(0, .1))) +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-    scale_fill_manual(breaks = blocks, values = get_block_colors(blocks)) +
-    scale_color_manual(breaks = blocks, values = get_block_colors(blocks))
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
   if (show_dist) {
     g_bipc <-
