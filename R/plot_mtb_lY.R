@@ -15,7 +15,7 @@
 #' @importFrom magrittr %>%  divide_by
 #' @importFrom dplyr as_tibble mutate
 #' @importFrom ggrepel geom_label_repel
-plot_mtb_Y <- function(res, xaxis = 1, yaxis = 2, scale_axes = "eig", add_loadings = TRUE, samples_color = NULL){
+plot_mtb_lY <- function(res, xaxis = 1, yaxis = 2, scale_axes = "eig", add_loadings = TRUE, samples_color = NULL){
 
   Yrow <-
     res$lY %>%

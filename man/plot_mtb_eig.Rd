@@ -4,14 +4,19 @@
 \alias{plot_mtb_eig}
 \title{Plots the eigenvalues and the cummulative projected inertia}
 \usage{
-plot_mtb_eig(res, xaxis = NULL, yaxis = NULL, annot = TRUE)
+plot_mtb_eig(res, xaxis = NULL, yaxis = NULL, annot = TRUE, title = NULL)
 }
 \arguments{
 \item{res}{the output of `ade4::mbpls` or `ade4::mbpcaiv`}
 
-\item{xaxis}{(optional) an `integer` specifying which latent variable to highlight}
+\item{xaxis}{(optional) an `integer` specifying which latent variable to highlight. Default is `NULL`}
 
-\item{yaxis}{(optional) an `integer` specifying which latent variable should be plotted on the y-axis. Default is 1.}
+\item{yaxis}{(optional) an `integer` specifying which latent variable to highlight. Default is `NULL`}
+
+\item{annot}{(optional) a `logical` specifying if an annotation with the total
+cumulative inertia should be added to the plot. Default is `TRUE`.}
+
+\item{title}{(optional) a `character` for the plot title. Default is `NULL`.}
 }
 \value{
 a `ggplot2` object
