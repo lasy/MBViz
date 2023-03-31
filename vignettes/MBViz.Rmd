@@ -23,6 +23,22 @@ theme_set(theme_light())
 ```
 
 
+## On simulated data
+
+```{r}
+
+n <- 200 # number of observations
+p <- 3:5 # number of variables in each X block
+q <- 5 # number of variables in Y
+Xs <- matrix(rnorm(n * sum(p)), nrow = n, ncol = sum(p)) %>% as_blocks(., p = p)
+Y <- matrix(rnorm(n * q), nrow = n, ncol = q)
+
+```
+
+
+
+## On the `chicken` data from the `ade4` package
+
 ```{r}
 
 data("chickenk")

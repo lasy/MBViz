@@ -9,7 +9,7 @@
 #' @importFrom purrr map
 as_blocks <- function(M, p){
   name_columns <- is.null(colnames(M))
-  block_names <- ifelse(is.null(names(p)), LETTERS[1:length(p)], names(p))
+  if (is.null(names(p))) block_names <- LETTERS[1:length(p)] else block_names <- names(p)
   M %>%
     purrr::map(
       .x = 1:length(p),
@@ -19,4 +19,17 @@ as_blocks <- function(M, p){
       },
       M = .)  %>%
     set_names(block_names)
+}
+
+
+#' Convert block lists to a `data.frame`
+#'
+#' @param L a `list` of matrices or data.frames
+#'
+#' @return a `tibble` (`data.frame`)
+#' @export
+#'
+#' @importFrom purrr map_dfc
+blocks_to_df <- function(L) {
+  purrr::map_dfc(.x = L, .f = as.data.frame)
 }
