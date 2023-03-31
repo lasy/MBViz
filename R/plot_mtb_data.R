@@ -13,6 +13,9 @@
 #' @importFrom stats weighted.mean
 plot_mtb_data <- function(Xs, Y){
 
+  if (any(class(Y) != "list")) Y <- list(Y = Y)
+
+  if (is.null(rownames(Y[[1]]))) rownames(Y[[1]]) <- 1:nrow(Y[[1]])
   j <-
     apply(Y[[1]], 1, function(x) weighted.mean(seq_along(x), x)) %>%
     order(., decreasing = TRUE)
@@ -59,6 +62,8 @@ get_mtb_blocks <- function(blocks) {
   purrr::map_dfr(
     .x = seq_along(blocks),
     .f = function(i, blocks) {
+      if (is.null(rownames(blocks[[i]]))) rownames(blocks[[i]]) <- 1:nrow(blocks[[i]])
+      if (is.null(colnames(blocks[[i]]))) colnames(blocks[[i]]) <- str_c(names(blocks)[i], "_", 1:ncol(blocks[[i]]))
       blocks[[i]] %>%
         scale() %>%
         as_tibble() %>%

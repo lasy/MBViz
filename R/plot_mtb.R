@@ -14,8 +14,8 @@
 #' @import patchwork
 plot_mtb <-
   function(res, xaxis = 1, yaxis = 2, scale_axes = "fixed", samples_color = NULL, block_colors = NULL) {
-    g_Y <-
-      plot_mtb_Y(
+    g_lY <-
+      plot_mtb_lY(
         res = res,
         xaxis = xaxis, yaxis = yaxis, scale_axes = scale_axes,
         samples_color = samples_color
@@ -56,10 +56,12 @@ plot_mtb <-
   EEFF
   "
 
-    g_eig +
-      # g_Y +
-      g_lX +
-      g_cov +
-      g_Xloadings +
-      plot_layout(design = design, height = c(2,2,1,4))
+    design <- "
+  ABC
+  EFG
+  "
+
+    g_eig + g_cov +
+      g_lY + g_lX +  g_Xloadings +
+      plot_layout(design = design, height = c(1,2))
   }

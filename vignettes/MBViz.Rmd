@@ -31,9 +31,28 @@ n <- 200 # number of observations
 p <- 3:5 # number of variables in each X block
 q <- 5 # number of variables in Y
 Xs <- matrix(rnorm(n * sum(p)), nrow = n, ncol = sum(p)) %>% as_blocks(., p = p)
-Y <- matrix(rnorm(n * q), nrow = n, ncol = q)
+Y <- matrix(rnorm(n * q), nrow = n, ncol = q) %>% list(Y = .)
+
+plot_mtb_blocks(Xs = Xs, Y = Y)
+plot_mtb_data(Xs = Xs, Y = Y)
 
 ```
+
+
+```{r}
+
+PLS_A <- mbpls(
+  dudiY = dudi.pca(df = Y$Y, scannf = FALSE, nf = 2),
+  ktabX = ktab.list.df(list(X = Xs %>% blocks_to_df())),
+  scale = TRUE,
+  scannf = FALSE, nf = 2
+)
+
+plot_mtb(PLS_A)
+
+```
+
+
 
 
 

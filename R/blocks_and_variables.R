@@ -30,7 +30,9 @@ blocks_and_variables <- function(res) {
   map_dfr(
     .x = names(inputs),
     .f = function(input, inputs){
-      tibble(block = input, variable = colnames(inputs[[input]]))
+      variables <- colnames(inputs[[input]])
+      if (is.null(variables)) variables <- str_c(input, "_", 1:ncol(inputs[[input]]))
+      tibble(block = input, variable = variables)
     },
     inputs = inputs
   ) %>%
