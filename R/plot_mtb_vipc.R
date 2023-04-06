@@ -1,8 +1,8 @@
 
 #' Plots the bootstraped and observed Block Importance
 #'
-#' @param boot the output of `ade4::randboot`
-#' @param input_var a `data.frame` xxxx
+#' @param boot the output of `                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           `
+#' @param res the output of `ade4::mbpls` (or `ade4::mbpcaiv`) (the input of)
 #'
 #' @return a `ggplot2` object
 #' @export
@@ -12,7 +12,9 @@
 #' @importFrom dplyr as_tibble mutate left_join join_by arrange
 #' @importFrom stringr str_wrap
 #' @import ggplot2
-plot_mtb_vipc <- function(boot, input_var){
+plot_mtb_vipc <- function(boot, res){
+
+  input_var <- blocks_and_variables(res)
 
   bootstraps_vipc <-
     boot$vipc$boot %>%
@@ -35,7 +37,7 @@ plot_mtb_vipc <- function(boot, input_var){
     left_join(input_var, by = join_by(variable)) %>%
     arrange(block) %>%
     mutate(
-      pretty_block = c(block, width = 12),
+      pretty_block = str_wrap(block, width = 12),
       pretty_block = pretty_block %>% factor(., levels = unique(pretty_block))
     )
 

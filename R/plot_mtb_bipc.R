@@ -2,7 +2,7 @@
 #' Plots the bootstraped and observed Block Importance
 #'
 #' @param boot the output of `ade4::randboot`
-#' @param input_var a `data.frame` xxxx
+#' @param res the output of `ade4::mbpls` (or `ade4::mbpcaiv`) (the input of)
 #' @param show_dist (optional) a `logical` specifying if the bootstrap distribution should be shown with a boxplot.
 #' Default is FALSE
 #' @param CI The confidence interval that should be displayed. Default is 0.95.
@@ -14,8 +14,9 @@
 #' @importFrom dplyr as_tibble mutate
 #' @importFrom stats quantile
 #' @import ggplot2
-plot_mtb_bipc <- function(boot, input_var, show_dist = FALSE, CI = 0.95) {
+plot_mtb_bipc <- function(boot, res, show_dist = FALSE, CI = 0.95) {
 
+  input_var <- blocks_and_variables(res)
   bootstraps_bipc <-
     boot$bipc$boot %>%
     t() %>%

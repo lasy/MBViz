@@ -99,7 +99,7 @@ Or use the `MBViz` functions that allow customization.
 
 ```{r}
 
-plot_mtb_eig(res)
+plot_mtb_eig(res, xaxis = 1, yaxis = 2)
 
 ```
 
@@ -113,7 +113,7 @@ plot_mtb_lX(res)
 
 ```{r}
 
-plot_mtb_Y(res)
+plot_mtb_lY(res)
 # plot_mtb_Y(res, samples_color = Y$Mortality/rowSums(Y$Mortality))
 # BUGGY plot_mtb_Y(res, samples_color = sample(c(1,2), size = res$lw %>% sum(), replace = TRUE))
 
@@ -135,6 +135,24 @@ plot_mtb_Xloadings(res)
 ```{r}
 
 plot_mtb(res)
+
+```
+
+```{r}
+
+
+set.seed(123456)
+test_res <- testdim(res, nrepet = 199, optdim = 4)
+boot <- randboot(res, nrepet = 500, optdim = 4)
+
+
+```
+
+```{r}
+
+plot_mtb_vipc(boot, res)
+plot_mtb_bipc(boot, res)
+
 
 ```
 
