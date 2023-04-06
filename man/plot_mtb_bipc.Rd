@@ -2,14 +2,14 @@
 % Please edit documentation in R/plot_mtb_bipc.R
 \name{plot_mtb_bipc}
 \alias{plot_mtb_bipc}
-\title{Plots the bootstraped and observed Block Importance}
+\title{Plots the observed (and bootstrapped) cumulative Block Importance in Projections (BIPC)}
 \usage{
-plot_mtb_bipc(boot, input_var, show_dist = FALSE, CI = 0.95)
+plot_mtb_bipc(res, boot = NULL, show_dist = FALSE, CI = 0.95)
 }
 \arguments{
-\item{boot}{the output of `ade4::randboot`}
+\item{res}{the output of `ade4::mbpls` (or `ade4::mbpcaiv`)}
 
-\item{input_var}{a `data.frame` xxxx}
+\item{boot}{(optional) the output of `ade4::randboot`}
 
 \item{show_dist}{(optional) a `logical` specifying if the bootstrap distribution should be shown with a boxplot.
 Default is FALSE}
@@ -20,5 +20,5 @@ Default is FALSE}
 a `ggplot2` object
 }
 \description{
-Plots the bootstraped and observed Block Importance
+Plots the observed (and bootstrapped) cumulative Block Importance in Projections (BIPC)
 }

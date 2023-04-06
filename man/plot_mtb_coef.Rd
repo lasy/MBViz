@@ -5,23 +5,24 @@
 \title{Plots the coefficients of associations between the explanatory and response variables}
 \usage{
 plot_mtb_coef(
-  boot,
+  res,
+  boot = NULL,
   Y_var = NULL,
-  input_var,
   CI = 0.95,
   format = "long",
   max_coef_value = NULL
 )
 }
 \arguments{
-\item{boot}{the output of `ade4::randboot`}
+\item{res}{the output of `ade4::mbpls` (or `ade4::mbpcaiv`) (the input of `ade4::randboot`)}
 
-\item{Y_var}{(optional) a `character` specifying the names of selected response variables
-if one desires to display the coefficients for a subset of variables.}
+\item{boot}{(optional) the output of `ade4::randboot` to display the confidence intervals}
 
-\item{input_var}{a `data.frame` xxxx}
+\item{Y_var}{(optional) a `integer` or a `character` specifying the indices
+or names of selected response variables if one desires to display the
+coefficients for a subset of variables.}
 
-\item{CI}{The width of the confidence interval that should be displayed. Default is 0.95.}
+\item{CI}{(optional) The width of the confidence interval that should be displayed. Default is 0.95.}
 
 \item{format}{"long" or "wide". a `character` specifying if the coefficients should be displayed horizontally or vertically. (default = "long")}
 

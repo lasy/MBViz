@@ -2,18 +2,20 @@
 % Please edit documentation in R/plot_mtb_vipc.R
 \name{plot_mtb_vipc}
 \alias{plot_mtb_vipc}
-\title{Plots the bootstraped and observed Block Importance}
+\title{Plots the observed (and bootstrapped) cumulative Variable Importance in Projection (VIPC)}
 \usage{
-plot_mtb_vipc(boot, input_var)
+plot_mtb_vipc(res, boot, CI = 0.95)
 }
 \arguments{
-\item{boot}{the output of `ade4::randboot`}
+\item{res}{the output of `ade4::mbpls` (or `ade4::mbpcaiv`)}
 
-\item{input_var}{a `data.frame` xxxx}
+\item{boot}{(optional) the output of `ade4::randboot`}
+
+\item{CI}{(optional) The width of the confidence interval that should be displayed. Default is 0.95.}
 }
 \value{
 a `ggplot2` object
 }
 \description{
-Plots the bootstraped and observed Block Importance
+Plots the observed (and bootstrapped) cumulative Variable Importance in Projection (VIPC)
 }

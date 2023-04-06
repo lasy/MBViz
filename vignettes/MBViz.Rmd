@@ -143,16 +143,16 @@ plot_mtb(res)
 
 set.seed(123456)
 test_res <- testdim(res, nrepet = 199, optdim = 4)
-boot <- randboot(res, nrepet = 500, optdim = 4)
+boot <- randboot(res, nrepet = 100, optdim = res$nf)
 
 
 ```
 
 ```{r}
 
-plot_mtb_vipc(boot, res)
-plot_mtb_bipc(boot, res)
-
+plot_mtb_vipc(res = res, boot = boot)
+plot_mtb_bipc(res = res, boot = boot)
+plot_mtb_coef(res = res, boot = boot, Y_var = 1)
 
 ```
 

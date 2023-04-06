@@ -1,8 +1,8 @@
 
-#' Plots the bootstraped and observed Block Importance
+#' Plots the observed (and bootstrapped) cumulative Block Importance in Projections (BIPC)
 #'
-#' @param boot the output of `ade4::randboot`
-#' @param res the output of `ade4::mbpls` (or `ade4::mbpcaiv`) (the input of)
+#' @param res the output of `ade4::mbpls` (or `ade4::mbpcaiv`)
+#' @param boot (optional) the output of `ade4::randboot`
 #' @param show_dist (optional) a `logical` specifying if the bootstrap distribution should be shown with a boxplot.
 #' Default is FALSE
 #' @param CI The confidence interval that should be displayed. Default is 0.95.
@@ -11,12 +11,22 @@
 #' @export
 #' @importFrom magrittr %>% set_colnames
 #' @importFrom tidyr pivot_longer
-#' @importFrom dplyr as_tibble mutate
+#' @importFrom dplyr as_tibble mutate select
 #' @importFrom stats quantile
 #' @import ggplot2
-plot_mtb_bipc <- function(boot, res, show_dist = FALSE, CI = 0.95) {
+plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95) {
 
   input_var <- blocks_and_variables(res)
+  nf <- ifelse(is.null(boot), res$nf, which.min(abs(boot$bipc$obs[1] - res$bipc[1,])))
+
+  bipc <-
+    tibble(block = rownames(res$bipc), value = res$bipc[,nf]) %>%
+    mutate(
+      block = block %>% factor(., levels = input_var$block %>% levels())
+    ) %>%
+    left_join(input_var %>% dplyr::select(-variable) %>% dplyr::distinct(), by = join_by(block))
+
+  if (!is.null(boot)) {
   bootstraps_bipc <-
     boot$bipc$boot %>%
     t() %>%
@@ -33,21 +43,25 @@ plot_mtb_bipc <- function(boot, res, show_dist = FALSE, CI = 0.95) {
       values_to = "value"
     )
 
-  obs_bipc <-
-    tibble(
-      block = names(boot$bipc$obs) %>%
-        factor(., levels = input_var$block %>% levels()) ,
-      value = boot$bipc$obs
+  bootstraps_bipc_summary <-
+    bootstraps_bipc %>%
+    group_by(block) %>%
+    summarize(
+      lo = quantile(value, p = (1-CI)/2),
+      up = quantile(value, p = CI + (1-CI)/2),
+      .groups = "drop"
     )
 
-  blocks <- obs_bipc$block
-
+  bipc <- bipc %>% left_join(bootstraps_bipc_summary, by = join_by(block))
+  } else {
+    bipc <- bipc %>% mutate(lo = 0, up = value)
+  }
 
   g_bipc <-
-    ggplot(obs_bipc ,
+    ggplot(bipc ,
            aes(x = block, y = value)) +
     geom_hline(yintercept = 0) +
-    geom_hline(yintercept = 1/length(unique(bootstraps_bipc$block)),
+    geom_hline(yintercept = 1/nrow(bipc),
                linetype = 3, col = "gray70") +
     expand_limits(y = 0) +
     guides(fill = "none", col = "none") +
@@ -66,24 +80,16 @@ plot_mtb_bipc <- function(boot, res, show_dist = FALSE, CI = 0.95) {
       ) +
       geom_point()
   } else {
-    bootstraps_bipc_summary <-
-      bootstraps_bipc %>%
-      group_by(block) %>%
-      summarize(
-        lo = quantile(value, p = (1-CI)/2),
-        up = quantile(value, p = CI + (1-CI)/2)
-        )
-
     g_bipc <-
       g_bipc +
       geom_segment(
-        data = bootstraps_bipc_summary,
         aes(xend = block, y = lo, yend = up, col = block),
-        linewidth = 2, alpha = 0.6, lineend = "round"
+        alpha = ifelse(is.null(boot), 1, 0.5),
+        linewidth = ifelse(is.null(boot), 0.5, 2),
+        lineend = "round"
       ) +
       geom_point(aes(col = block), size = 3)
   }
-
 
   g_bipc
 
