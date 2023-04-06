@@ -13,7 +13,7 @@ plot_mtb_blocks <- function(Xs, Y){
   Xs_vars <- .blocks_and_variables_from_list(Xs)
   Y_vars <- .blocks_and_variables_from_list(Y)
   g_Xs <- .plot_mtb_blocks(Xs_vars) + ggtitle("Explanatory\nvariables") +
-    xlab(str_c("n = ", nrow(Xs[[1]])))
+    ylab(str_c("n = ", nrow(Xs[[1]])))
   g_Y <- .plot_mtb_blocks(Y_vars) + ggtitle("Response\nvariables")
   g_Xs + g_Y + plot_layout(widths = c(nrow(Xs_vars), nrow(Y_vars)))
 }
@@ -39,7 +39,7 @@ plot_mtb_blocks <- function(Xs, Y){
     geom_text(aes(label = variable, col = block), angle = 90) +
     facet_grid(. ~ pretty_block, scales = "free", space = "free") +
     scale_x_discrete("", breaks = NULL) +
-    scale_y_continuous("", breaks = NULL) +
+    scale_y_continuous(breaks = NULL) + ylab("") +
     guides(col = "none", fill = "none") +
     theme(
       strip.text = element_text(color = "black")
