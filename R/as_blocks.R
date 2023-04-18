@@ -10,14 +10,14 @@
 as_blocks <- function(M, p){
   name_columns <- is.null(colnames(M))
   if (is.null(names(p))) block_names <- LETTERS[1:length(p)] else block_names <- names(p)
-  M %>%
-    purrr::map(
+  purrr::map(
       .x = 1:length(p),
       .f = function(M, i) {
         M_i <- M[,(1:p[i]) + c(0,cumsum(p))[i]]
         if (name_columns) M_i <- M_i %>% set_colnames(str_c(block_names[i],"_", 1:p[i]))
+        M_i
       },
-      M = .)  %>%
+      M = M)  %>%
     set_names(block_names)
 }
 
