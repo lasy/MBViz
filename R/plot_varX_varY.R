@@ -15,29 +15,29 @@
 plot_varX_varY <- function(Xs = NULL, Y = NULL, res = NULL, varX, varY, color_by = NULL) {
 
   if (!is.null(res)) {
+    X <- res$tabX
     Y <- res$tabY
-    XY <- dplyr::bind_cols(res$tabX, Y)
-    all_vars <- blocks_and_variables(res) %>% add_Y_vars_to_blocks_and_variables(., Y)
   } else {
     if (is.null(Xs) | is.null(Y)) stop("Xs and Y or res must be provided.\n")
-    XY <- dplyr::bind_cols(blocks_to_df(Xs), Y)
-    all_vars <- .blocks_and_variables_from_list(Xs) %>% add_Y_vars_to_blocks_and_variables(., Y)
+    X <- blocks_to_df(Xs)
   }
 
   if (!is.null(color_by)) {
-    if (is.character(color_by) & (length(color_by) == 1) & (color_by %in% all_vars$variable)) {
-      colors <- XY[,color_by]
-    } else if (length(color_by) == nrow(XY)) {
+    if (is.character(color_by) & (length(color_by) == 1)){
+      if (color_by %in% colnames(X)) colors <- Xs[,color_by]
+      else if (color_by %in% colnames(Y)) colors <- Y[, color_by]
+      else stop("If `color_by` is a character, it should be the name of a Xs or a Y variable.")
+    } else if (length(color_by) == nrow(X)) {
       colors <- color_by
-      } else
-        stop("color_by must be a character providing the name of an X variable or
+    } else
+      stop("color_by must be a character providing the name of an X variable or
                  a value vector with the same length as the dimension of the data.\n")
   } else {
     colors <- "A"
   }
 
 
-  df <- tibble(x = XY[,varX], y = XY[,varY], color = colors)
+  df <- tibble(x = X[,varX], y = Y[,varY], color = colors)
 
  g <-
    ggplot(df, aes(x = x, y = y, col = color)) +
