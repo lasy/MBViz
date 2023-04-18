@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+library(magrittr)
 library(MBViz)
 library(ade4)
 library(adegraphics)
@@ -51,6 +52,9 @@ PLS_A <- mbpls(
 plot_mtb(PLS_A)
 
 ```
+
+
+
 
 
 
@@ -138,6 +142,17 @@ plot_mtb(res)
 
 ```
 
+
+```{r}
+
+plot_varX_varY(res = res, varX = "NbChick", varY = "Condemn")
+
+```
+
+
+
+
+
 ```{r}
 
 
@@ -155,4 +170,5 @@ plot_mtb_bipc(res = res, boot = boot)
 plot_mtb_coef(res = res, boot = boot, Y_var = 1)
 
 ```
+
 
