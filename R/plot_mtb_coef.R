@@ -13,7 +13,6 @@
 #' @return a `ggplot2` object
 #' @export
 #' @import ggplot2
-#' @importFrom purrr map_dfr
 #' @importFrom dplyr tibble as_tibble mutate row_number group_by summarize left_join join_by arrange n
 #' @importFrom tidyr pivot_longer
 #' @importFrom stringr str_wrap
@@ -21,77 +20,11 @@
 #' @importFrom forcats fct_rev
 plot_mtb_coef <- function(res, boot = NULL, Y_var = NULL, CI = 0.95, format = "long", max_coef_value = NULL){
 
-  format <- match.arg(format, choices = c("long", "wide"))
-  input_var <- blocks_and_variables(res)
-  all_Y_vars <- names(res$XYcoef)
-  if (is.null(Y_var)) Yvars <- all_Y_vars
-  else if (all(is.character(Y_var))) {
-    if (all(Y_var %in% all_Y_vars))  Yvars <- Y_var
-    else stop("Y_var must only include variables in the Y block\n")
-  }
-  else if (all(as.integer(Y_var) == Y_var)) {
-    if (all(Y_var %in% 1:length(all_Y_vars))) Yvars <- all_Y_vars[Y_var]
-    else stop("Y_var indices must be in 1:ncol(Y)\n")
-  } else stop("Y_var must be a character or integer (vector).")
 
+  coefs <- get_mtb_coef(res = res, boot = boot, Y_var = Y_var, CI = CI)
 
-  nf <- ifelse(is.null(boot), res$nf, which.min(abs(boot$XYcoef[[1]]$obs[1] - res$XYcoef[[1]][1,])))
-
-  coefs <-
-    purrr::map_dfr(
-      .x = Yvars,
-      .f = function(Yvar, res) {
-        tibble(
-          variable = rownames(res$XYcoef[[Yvar]]),
-          value = res$XYcoef[[Yvar]][, nf],
-          Yvar = Yvar
-        )
-      },
-      res = res
-    ) %>%
-    mutate(
-      variable = variable %>% factor(., levels = input_var$variable),
-      Yvar = Yvar %>% factor(., levels = all_Y_vars)
-      ) %>%
-    left_join(input_var, by = join_by(variable))
-
-  if (!is.null(boot)) {
-    boot_res <-
-      purrr::map_dfr(
-        .x = Yvars,
-        .f = function(Yvar, boot) {
-          boot$XYcoef[[Yvar]]$boot %>%
-            as_tibble() %>%
-            mutate(i = row_number()) %>%
-            pivot_longer(
-              cols = -i,
-              names_to = "variable",
-              values_to = "value"
-            ) %>%
-            mutate(Yvar = Yvar)
-        },
-        boot = boot
-      ) %>%
-      mutate(
-        variable = variable %>% factor(., levels = input_var$variable),
-        Yvar = Yvar %>% factor(., levels = all_Y_vars)
-        )
-
-    boot_summary <-
-      boot_res %>%
-      group_by(variable, Yvar) %>%
-      summarize(
-        lo = quantile(value, p = (1-CI)/2),
-        up = quantile(value, p = CI + (1-CI)/2),
-        p = abs(sum(value > 0) - sum(value < 0))/n(),
-        .groups = "drop"
-      ) %>%
-      mutate(CI_excludes_0 = ((lo*up) > 0)*1)
-
-    coefs <- coefs %>% left_join(boot_summary, by = join_by(variable, Yvar))
-  } else {
-    coefs <- coefs %>% mutate(CI_excludes_0 = 1, up = value, lo = value)
-  }
+  if (!("lo" %in% colnames(coefs))) coefs <-  coefs %>% mutate(lo = value, up = value)
+  coefs <- coefs %>% mutate(CI_excludes_0 = ((lo*up) > 0)*1)
 
   if (!is.null(max_coef_value)) {
     coefs <-
@@ -102,6 +35,7 @@ plot_mtb_coef <- function(res, boot = NULL, Y_var = NULL, CI = 0.95, format = "l
         )
   }
 
+  format <- match.arg(format, choices = c("long", "wide"))
   if (format == "long") coefs <- coefs %>% mutate(variable = variable %>% fct_rev())
 
   g <-
@@ -132,6 +66,8 @@ plot_mtb_coef <- function(res, boot = NULL, Y_var = NULL, CI = 0.95, format = "l
 
   g
 }
+
+
 
 # obs_coef <-
 #   purrr::map_dfr(

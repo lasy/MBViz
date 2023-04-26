@@ -54,7 +54,51 @@ plot_mtb(PLS_A)
 ```
 
 
+```{r}
 
+plot_mtb_coef(res = PLS_A)
+
+```
+
+
+**Predictions**
+
+To demonstrate the `mtb_predict` function, we build $Y$ as linear combinations of the $Xs$ so we can have perfect predictions.
+
+```{r}
+
+coefs <- matrix(rbinom(sum(p)*q, 1, prob = 0.5), sum(p), q)
+Y <- (as.matrix(blocks_to_df(Xs)) %*% coefs) %>% list(Y = .)
+ktabXs <- ktab.list.df(list(X = Xs %>% blocks_to_df()))
+
+i_train <- sample(c(TRUE, FALSE), nrow(Xs$A), replace = TRUE, prob = c(0.8, 0.2))
+j_train <- which(i_train); j_test <- which(!i_train)
+ktabXs_train <- ktab.list.df(list(X = blocks_to_df(Xs)[j_train,] %>% set_rownames(1:sum(i_train))))
+Y_train <- list(Y = Y$Y[j_train,] %>% set_rownames(1:sum(i_train)))
+ktabXs_test <- ktab.list.df(list(X = blocks_to_df(Xs)[j_test,]))
+Y_test <- list(Y = Y$Y[j_test,])
+
+
+PLS_B <- 
+  mbpls(
+  dudiY = dudi.pca(df = Y_train$Y, scannf = FALSE, nf = 2),
+  ktabX = ktabXs_train,
+  scale = TRUE, option = "uniform",
+  scannf = FALSE, nf = 12
+)
+
+plot(coefs, get_mtb_coef(res = PLS_B, as_matrix = TRUE), cex = 0.5, pch = 16); abline(a = 0, b = 1)
+
+Y_test_hat <- 
+  mtb_predict(
+    res = PLS_B, original_Y = Y_train$Y, 
+    newdata = ktabXs_test, original_X = ktabXs_train
+    )
+plot(Y_test_hat, Y_test$Y, pch = 16, cex = 0.5); abline(a = 0, b = 1)
+
+
+
+```
 
 
 
