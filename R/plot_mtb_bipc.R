@@ -17,7 +17,7 @@
 plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95) {
 
   input_var <- blocks_and_variables(res)
-  if (class(res) == "mbplsda") {
+  if ("mbplsda" %in% class(res)) {
     nf <- ifelse(is.null(boot), res$nf, boot$call$optdim)
   } else {
     nf <- ifelse(is.null(boot), res$nf, which.min(abs(boot$bipc$obs[1] - res$bipc[1,])))
@@ -32,7 +32,7 @@ plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95) {
     left_join(input_var %>% dplyr::select(-variable) %>% dplyr::distinct(), by = join_by(block))
 
   if (!is.null(boot)) {
-    if (class(boot) == "boot_mbplsda") {
+    if ("boot_mbplsda" %in% class(boot)) {
       bipc <-
         bipc %>%
         left_join(

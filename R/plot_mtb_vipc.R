@@ -16,7 +16,7 @@
 plot_mtb_vipc <- function(res, boot, CI = 0.95){
 
   input_var <- blocks_and_variables(res)
-  if (class(res) == "mbplsda") {
+  if ("mbplsda" %in% class(res))  {
     nf <- ifelse(is.null(boot), res$nf, boot$call$optdim)
   } else {
     nf <- ifelse(is.null(boot), res$nf, which.min(abs(boot$bipc$obs[1] - res$bipc[1,])))
@@ -29,7 +29,7 @@ plot_mtb_vipc <- function(res, boot, CI = 0.95){
     left_join(input_var, by = join_by(variable))
 
   if (!is.null(boot)) {
-    if (class(boot) == "boot_mbplsda") {
+    if ("boot_mbplsda" %in% class(boot)) {
       vipc <-
         vipc %>%
         left_join(
