@@ -17,7 +17,12 @@
 plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95) {
 
   input_var <- blocks_and_variables(res)
-  nf <- ifelse(is.null(boot), res$nf, which.min(abs(boot$bipc$obs[1] - res$bipc[1,])))
+  if (class(res) == "mbplsda") {
+    nf <- ifelse(is.null(boot), res$nf, boot$call$optdim)
+  } else {
+    nf <- ifelse(is.null(boot), res$nf, which.min(abs(boot$bipc$obs[1] - res$bipc[1,])))
+  }
+
 
   bipc <-
     tibble(block = rownames(res$bipc), value = res$bipc[,nf]) %>%
@@ -27,6 +32,18 @@ plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95) {
     left_join(input_var %>% dplyr::select(-variable) %>% dplyr::distinct(), by = join_by(block))
 
   if (!is.null(boot)) {
+    if (class(boot) == "boot_mbplsda") {
+      bipc <-
+        bipc %>%
+        left_join(
+          boot$bipc %>%
+            dplyr::select(blocks, Q2.5, Q97.5) %>%
+            dplyr::rename(block = blocks, lo = Q2.5, up = Q97.5) %>%
+            dplyr::mutate(block = block %>% factor(., levels = input_var$block %>% levels())),
+          by = join_by(block)
+          )
+    } else {
+
   bootstraps_bipc <-
     boot$bipc$boot %>%
     t() %>%
@@ -53,6 +70,7 @@ plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95) {
     )
 
   bipc <- bipc %>% left_join(bootstraps_bipc_summary, by = join_by(block))
+    }
   } else {
     bipc <- bipc %>% mutate(lo = 0, up = value)
   }

@@ -23,8 +23,9 @@ library(ggplot2)
 theme_set(theme_light())
 ```
 
-
-## On simulated data
+## MB-PLS (multiblock PLS)
+ 
+### On simulated data
 
 ```{r}
 
@@ -104,7 +105,7 @@ plot(Y_test_hat, Y_test$Y, pch = 16, cex = 0.5); abline(a = 0, b = 1)
 
 
 
-## On the `chicken` data from the `ade4` package
+### On the `chicken` data from the `ade4` package
 
 ```{r}
 
@@ -215,4 +216,70 @@ plot_mtb_coef(res = res, boot = boot, Y_var = 1)
 
 ```
 
+
+## MB-PLS-DA (multi-block PLS discriminant analysis)
+
+
+```{r}
+
+library(packMBPLSDA)
+
+```
+
+### On simulated data
+
+We simulate some data:
+
+```{r}
+
+set.seed(123)
+A <- simulate_Xs_Y(categorical_Y = TRUE, snr = 2)
+visualize_simulated_latent_structure(A)
+
+```
+
+We fit the MBPLSDA on the simulated data
+
+```{r}
+
+res <- 
+  mbplsda(
+  dudiY = dudi.pca(A$Y, scannf = FALSE, nf = 3), 
+  ktabX = ktab.list.df(A$Xs),
+  scale = TRUE, option = "uniform", 
+  scannf = FALSE, nf = ncol(A$Y)
+  )
+
+```
+
+
+```{r}
+
+plot_mtb(res, samples_color = A$Y)
+
+```
+
+
+
+We bootstrap confidence intervals
+
+```{r}
+boot <- boot_mbplsda(res, rep = 200, optdim = 2)
+```
+
+
+
+```{r}
+
+plot_mtbda_coef(res = res, boot = boot, format = "wide")
+
+```
+
+
+```{r}
+
+plot_mtb_bipc(res, boot = boot)
+plot_mtb_vipc(res, boot = boot)
+
+```
 

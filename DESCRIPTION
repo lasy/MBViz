@@ -15,6 +15,7 @@ Imports:
     ggplot2,
     ggrepel,
     magrittr,
+    packMBPLSDA,
     patchwork,
     purrr,
     stats,
