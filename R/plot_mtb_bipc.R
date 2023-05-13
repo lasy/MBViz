@@ -6,6 +6,7 @@
 #' @param show_dist (optional) a `logical` specifying if the bootstrap distribution should be shown with a boxplot.
 #' Default is FALSE
 #' @param CI The confidence interval that should be displayed. Default is 0.95.
+#' @param wrap_block_names (optional) `logical` specifying if block names (x-axis) should be wrapped. Default is `TRUE`.
 #'
 #' @return a `ggplot2` object
 #' @export
@@ -14,7 +15,7 @@
 #' @importFrom dplyr as_tibble mutate select
 #' @importFrom stats quantile
 #' @import ggplot2
-plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95) {
+plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95, wrap_block_names = TRUE) {
 
   input_var <- blocks_and_variables(res)
   if ("mbplsda" %in% class(res)) {
@@ -75,9 +76,11 @@ plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95) {
     bipc <- bipc %>% mutate(lo = 0, up = value)
   }
 
+  if (wrap_block_names) bipc <- bipc %>% mutate(x = pretty_block) else bipc <- bipc %>% mutate(x = block)
+
   g_bipc <-
     ggplot(bipc ,
-           aes(x = block, y = value)) +
+           aes(x = x, y = value)) +
     geom_hline(yintercept = 0) +
     geom_hline(yintercept = 1/nrow(bipc),
                linetype = 3, col = "gray70") +
@@ -101,7 +104,7 @@ plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95) {
     g_bipc <-
       g_bipc +
       geom_segment(
-        aes(xend = block, y = lo, yend = up, col = block),
+        aes(xend = x, y = lo, yend = up, col = block),
         alpha = ifelse(is.null(boot), 1, 0.5),
         linewidth = ifelse(is.null(boot), 0.5, 2),
         lineend = "round"

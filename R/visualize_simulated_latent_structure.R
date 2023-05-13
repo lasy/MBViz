@@ -1,4 +1,11 @@
 
+#' Plot the simulated latent structures
+#'
+#' @param A the output of `simulate_Xs_Y`
+#'
+#' @return a `ggplot2` object
+#' @export
+#'
 visualize_simulated_latent_structure <- function(A){
   if (ncol(A$Bxx) != ncol(A$Bxy))
     stop("Bxx and Bxy must have the same number of columns")

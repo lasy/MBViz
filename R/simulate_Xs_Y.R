@@ -1,9 +1,34 @@
 
+#' Simulate "multiblock" data
+#'
+#' @param n (an `integer`) the number of samples.
+#' @param p (a `vector` of `integer`s) the number of variable in each block.
+#' The number of block is specified by the length of `p`.
+#' @param q (an `integer`) the number of response variables.
+#' @param nlX (an `integer`) the number of latent variables for the
+#' explanatory variables only.
+#' @param nlY (an `integer`) the number of latent variables shared by the
+#' explanatory and response variables.
+#' @param snr (a strictly positive `double`) the signal to noise ratio.
+#' @param Bxx_function (a `function`) a function specifying how the explanatory
+#' variables depend on the X-only latent factors. `sample_B_random` is the default.
+#' @param Bxy_function (a `function`) a function specifying how the explanatory
+#' variables depend on the shared latent factors. `sample_B_random` is the default.
+#' @param By_function (a `function`) a function specifying how the response
+#' variables depend on the shared latent factors. `sample_B_random` is the default.
+#' @param categorical_Y (a `logical`) whether the response variables are Bernoulli.
+#'
+#' @return a `list` with the simulated data.
+#' @export
+#'
+#' @import magrittr
 simulate_Xs_Y <- function(
     n = 200, p = 2:5, q = 4, nlX = 2, nlY = 3, snr = 1,
     Bxx_function = sample_B_random, Bxy_function = sample_B_random, By_function = sample_B_random,
     categorical_Y = FALSE
     ){
+
+
   P <- sum(p)
 
   e <- matrix(rnorm(n * P), nrow = n, ncol = P) %>% scale() # noise matrix for X
@@ -28,7 +53,29 @@ simulate_Xs_Y <- function(
 
 }
 
-compute_Xs_Y <- function(Bxx = 0, Bxy = 0, By = 0, lX = 0, lY = 0, p, e, f, snr = 1, categorical_Y = FALSE){
+#' Computes the simulated data
+#'
+#' @param Bxx (optional) a `nlX x sum(p)` `matrix` specifying the relationship
+#' between the explanatory variables and the X-only latent factors.
+#' Default = no relationship.
+#' @param Bxy (optional) a `nlY x sum(p)` `matrix` specifying the relationship
+#' between the explanatory variables and the shared latent factors.
+#' Default = no relationship.
+#' @param By (optional) a `nlY x sum(p)` `matrix` specifying the relationship
+#' between the explanatory variables and the shared latent factors.
+#' Default = no relationship.
+#' @param lX a `n x nlX` `matrix` with the X-only latent variables.
+#' @param lY a `n x nlY` `matrix` with the shared latent variables.
+#' @param p a `vector` of `integer`s with the number of variables in each block.
+#' @param e a `n x sum(p)` `matrix` with the explanatory variables noise.
+#' @param f a `n x q` `matrix` with the response variables noise.
+#' @param snr a strictly positive `double` specifying the signal-to-noise ratio.
+#' @param categorical_Y
+#'
+#' @return a `list` with the computed data
+#' @keywords internal
+#' @import magrittr
+compute_Xs_Y <- function(Bxx = 0, Bxy = 0, By = 0, lX, lY, p, e, f, snr = 1, categorical_Y = FALSE){
   if (length(Bxx) == 1) LXX <- 0*e else LXX <- lX %*% Bxx
   if (length(Bxy) == 1) LXY <- 0*e else LXY <- lY %*% Bxy
 

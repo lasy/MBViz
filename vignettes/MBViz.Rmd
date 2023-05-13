@@ -62,6 +62,7 @@ plot_mtb_coef(res = PLS_A)
 ```
 
 
+
 **Predictions**
 
 To demonstrate the `mtb_predict` function, we build $Y$ as linear combinations of the $Xs$ so we can have perfect predictions.
@@ -100,7 +101,6 @@ plot(Y_test_hat, Y_test$Y, pch = 16, cex = 0.5); abline(a = 0, b = 1)
 
 
 ```
-
 
 
 

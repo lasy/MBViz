@@ -4,7 +4,13 @@
 \alias{plot_mtb_bipc}
 \title{Plots the observed (and bootstrapped) cumulative Block Importance in Projections (BIPC)}
 \usage{
-plot_mtb_bipc(res, boot = NULL, show_dist = FALSE, CI = 0.95)
+plot_mtb_bipc(
+  res,
+  boot = NULL,
+  show_dist = FALSE,
+  CI = 0.95,
+  wrap_block_names = TRUE
+)
 }
 \arguments{
 \item{res}{the output of `ade4::mbpls` (or `ade4::mbpcaiv`)}
@@ -15,6 +21,8 @@ plot_mtb_bipc(res, boot = NULL, show_dist = FALSE, CI = 0.95)
 Default is FALSE}
 
 \item{CI}{The confidence interval that should be displayed. Default is 0.95.}
+
+\item{wrap_block_names}{(optional) `logical` specifying if block names (x-axis) should be wrapped. Default is `TRUE`.}
 }
 \value{
 a `ggplot2` object
