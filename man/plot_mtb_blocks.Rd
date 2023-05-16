@@ -4,12 +4,23 @@
 \alias{plot_mtb_blocks}
 \title{Displays the blocks structure}
 \usage{
-plot_mtb_blocks(Xs, Y)
+plot_mtb_blocks(
+  Xs,
+  Y,
+  response_first = FALSE,
+  min_text_size = 3,
+  max_text_size = 4,
+  title_sep = "\\n"
+)
 }
 \arguments{
 \item{Xs}{a `list` with the explanatory blocks}
 
 \item{Y}{a single element `list` with the response block}
+
+\item{response_first}{(optional) a `logical` specifying if the response block
+should be on the left (`response_first = TRUE`) or on the right
+(`response_first = FALSE`, default) of the explanatory variables.}
 }
 \value{
 a `ggplot2` object

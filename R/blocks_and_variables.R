@@ -42,7 +42,9 @@ blocks_and_variables <- function(res) {
   ) %>%
     mutate(
       block = block %>% factor(., levels = unique(block)),
-      variable = variable %>% factor(., levels = unique(variable))
+      variable = variable %>% factor(., levels = unique(variable)),
+      pretty_block = str_wrap(block, width = 12),
+      pretty_block = pretty_block %>% factor(., levels = unique(pretty_block))
     )
 }
 

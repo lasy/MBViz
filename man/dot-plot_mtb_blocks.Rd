@@ -4,10 +4,24 @@
 \alias{.plot_mtb_blocks}
 \title{Plots the blocks from a list}
 \usage{
-.plot_mtb_blocks(input_var)
+.plot_mtb_blocks(
+  input_var,
+  min_text_size = 3,
+  max_text_size = 4,
+  text_size_range
+)
 }
 \arguments{
 \item{input_var}{the output of `blocks_and_variable()`}
+
+\item{min_text_size}{(optional) a positive `double` specifying the minimum
+for the block variable text size.}
+
+\item{max_text_size}{(optional) a positive `double` specifying the maximum
+for the block variable text size.}
+
+\item{text_size_range}{a `vector` of two integers specifying the lengths of
+the shortest and longuest variable name}
 }
 \value{
 a `ggplot2` object
