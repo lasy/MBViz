@@ -10,7 +10,8 @@ plot_mtb_blocks(
   response_first = FALSE,
   min_text_size = 3,
   max_text_size = 4,
-  title_sep = "\\n"
+  title_sep = "\\n",
+  add_n = TRUE
 )
 }
 \arguments{
@@ -21,6 +22,18 @@ plot_mtb_blocks(
 \item{response_first}{(optional) a `logical` specifying if the response block
 should be on the left (`response_first = TRUE`) or on the right
 (`response_first = FALSE`, default) of the explanatory variables.}
+
+\item{min_text_size}{(optional) a positive `double` specifying the minimum
+for the block variable text size.}
+
+\item{max_text_size}{(optional) a positive `double` specifying the maximum
+for the block variable text size.}
+
+\item{title_sep}{(optional) a `character` specifying the separating character
+for the title (default is `"\n"`).}
+
+\item{add_n}{(optional) a `logical` specifying if the number of samples should
+be specified on the y-axis (default is `TRUE`)}
 }
 \value{
 a `ggplot2` object

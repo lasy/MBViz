@@ -6,7 +6,14 @@
 #' @param response_first (optional) a `logical` specifying if the response block
 #' should be on the left (`response_first = TRUE`) or on the right
 #' (`response_first = FALSE`, default) of the explanatory variables.
-
+#' @param min_text_size (optional) a positive `double` specifying the minimum
+#' for the block variable text size.
+#' @param max_text_size (optional) a positive `double` specifying the maximum
+#' for the block variable text size.
+#' @param title_sep (optional) a `character` specifying the separating character
+#' for the title (default is `"\n"`).
+#' @param add_n (optional) a `logical` specifying if the number of samples should
+#' be specified on the y-axis (default is `TRUE`)
 #'
 #' @return a `ggplot2` object
 #' @export
@@ -15,7 +22,7 @@
 #' @importFrom stringr str_c str_length
 plot_mtb_blocks <- function(Xs, Y, response_first = FALSE,
                             min_text_size = 3, max_text_size = 4,
-                            title_sep = "\n"){
+                            title_sep = "\n", add_n = TRUE){
   Xs_vars <- .blocks_and_variables_from_list(Xs)
   Y_vars <- .blocks_and_variables_from_list(Y)
   text_size_range <- range(str_length(c(Xs_vars$variable, Y_vars$variable)))
@@ -36,12 +43,13 @@ plot_mtb_blocks <- function(Xs, Y, response_first = FALSE,
     ggtitle(str_c("Response", title_sep, "variables")) +
     scale_color_manual(values = "gray40") +
     scale_fill_manual(values = "gray40")
+  if (add_n & response_first) g_Y <- g_Y + ylab(str_c("n = ", nrow(Xs[[1]])))
+  if (add_n & !response_first) g_Xs <- g_Xs + ylab(str_c("n = ", nrow(Xs[[1]])))
+
   if (response_first){
-    patch <- g_Y + ylab(str_c("n = ", nrow(Xs[[1]]))) + g_Xs +
-      plot_layout(widths = c(nrow(Y_vars), nrow(Xs_vars)))
+    patch <- g_Y + g_Xs + plot_layout(widths = c(nrow(Y_vars), nrow(Xs_vars)))
   } else {
-    patch <- g_Xs + ylab(str_c("n = ", nrow(Xs[[1]]))) + g_Y +
-      plot_layout(widths = c(nrow(Xs_vars), nrow(Y_vars)))
+    patch <- g_Xs + g_Y + plot_layout(widths = c(nrow(Xs_vars), nrow(Y_vars)))
   }
   patch
 }
