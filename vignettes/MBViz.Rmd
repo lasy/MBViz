@@ -54,6 +54,15 @@ plot_mtb(PLS_A)
 
 ```
 
+```{r}
+
+plot_mtb_bipc(res = PLS_A)
+plot_mtb_vipc(res = PLS_A)
+
+
+```
+
+
 
 ```{r}
 

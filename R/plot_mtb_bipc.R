@@ -11,72 +11,18 @@
 #' @return a `ggplot2` object
 #' @export
 #' @importFrom magrittr %>% set_colnames
-#' @importFrom tidyr pivot_longer
+#' @importFrom tidyr pivot_longer replace_na
 #' @importFrom dplyr as_tibble mutate select
 #' @importFrom stats quantile
 #' @import ggplot2
 plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95, wrap_block_names = TRUE) {
 
-  input_var <- blocks_and_variables(res)
-  if ("mbplsda" %in% class(res)) {
-    nf <- ifelse(is.null(boot), res$nf, boot$call$optdim)
-  } else {
-    nf <- ifelse(is.null(boot), res$nf, which.min(abs(boot$bipc$obs[1] - res$bipc[1,])))
-  }
-
-
-  bipc <-
-    tibble(block = rownames(res$bipc), value = res$bipc[,nf]) %>%
-    mutate(
-      block = block %>% factor(., levels = input_var$block %>% levels())
-    ) %>%
-    left_join(input_var %>% dplyr::select(-variable) %>% dplyr::distinct(), by = join_by(block))
-
-  if (!is.null(boot)) {
-    if ("boot_mbplsda" %in% class(boot)) {
-      bipc <-
-        bipc %>%
-        left_join(
-          boot$bipc %>%
-            dplyr::select(blocks, Q2.5, Q97.5) %>%
-            dplyr::rename(block = blocks, lo = Q2.5, up = Q97.5) %>%
-            dplyr::mutate(block = block %>% factor(., levels = input_var$block %>% levels())),
-          by = join_by(block)
-          )
-    } else {
-
-  bootstraps_bipc <-
-    boot$bipc$boot %>%
-    t() %>%
-    set_colnames(1:nrow(boot$bipc$boot)) %>%
-    as_tibble() %>%
-    mutate(
-      block =
-        colnames(boot$bipc$boot) %>%
-        factor(., levels = input_var$block %>% levels())
-    ) %>%
-    pivot_longer(
-      cols = -block,
-      names_to = "b",
-      values_to = "value"
-    )
-
-  bootstraps_bipc_summary <-
-    bootstraps_bipc %>%
-    group_by(block) %>%
-    summarize(
-      lo = quantile(value, p = (1-CI)/2),
-      up = quantile(value, p = CI + (1-CI)/2),
-      .groups = "drop"
-    )
-
-  bipc <- bipc %>% left_join(bootstraps_bipc_summary, by = join_by(block))
-    }
-  } else {
-    bipc <- bipc %>% mutate(lo = 0, up = value)
-  }
-
-  if (wrap_block_names) bipc <- bipc %>% mutate(x = pretty_block) else bipc <- bipc %>% mutate(x = block)
+  bipc <- get_mtb_bipc(res = res, boot = boot, CI = CI)
+  if (is.null(boot)) bipc <- bipc %>% mutate(lo = 0, up = value)
+  if (wrap_block_names)
+    bipc <- bipc %>% mutate(x = pretty_block)
+  else
+    bipc <- bipc %>% mutate(x = block)
 
   g_bipc <-
     ggplot(bipc ,

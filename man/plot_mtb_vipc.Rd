@@ -4,7 +4,7 @@
 \alias{plot_mtb_vipc}
 \title{Plots the observed (and bootstrapped) cumulative Variable Importance in Projection (VIPC)}
 \usage{
-plot_mtb_vipc(res, boot, CI = 0.95)
+plot_mtb_vipc(res, boot = NULL, CI = 0.95)
 }
 \arguments{
 \item{res}{the output of `ade4::mbpls` (or `ade4::mbpcaiv`)}
