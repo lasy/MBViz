@@ -4,7 +4,7 @@
 #' @param boot (optional) the output of `ade4::randboot` to display the confidence intervals
 #'
 #' @return an `integer`
-#' @keywords internal
+#' @export
 retrieve_nf <- function(res, boot){
   if ("mbplsda" %in% class(res)) {
     nf <- ifelse(is.null(boot), res$nf, length(boot$faX))

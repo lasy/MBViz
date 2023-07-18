@@ -17,4 +17,3 @@ an `integer`
 \description{
 Retrieve the number of latent factors used for the bootstrap CI estimations
 }
-\keyword{internal}
