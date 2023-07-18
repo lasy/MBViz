@@ -102,10 +102,10 @@ get_mtb_coef <- function(res, boot = NULL, Y_var = NULL, CI = 0.95, as_matrix = 
           up = quantile(value, p = CI + (1-CI)/2),
           p = abs(sum(value > 0) - sum(value < 0))/n(),
           .groups = "drop"
-        )
+        ) %>%
+        left_join(., input_var %>% select(variable, block), by = "variable")
     }
-
-    coefs <- coefs %>% left_join(boot_summary, by = join_by(variable, Yvar))
+    coefs <- coefs %>% left_join(boot_summary, by = join_by(variable, block, Yvar))
   }
 
   if (as_matrix) {
