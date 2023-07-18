@@ -53,36 +53,58 @@ get_mtb_coef <- function(res, boot = NULL, Y_var = NULL, CI = 0.95, as_matrix = 
     left_join(input_var, by = join_by(variable))
 
   if (!is.null(boot)) {
-    boot_res <-
-      purrr::map_dfr(
-        .x = Yvars,
-        .f = function(Yvar, boot) {
-          boot$XYcoef[[Yvar]]$boot %>%
-            as_tibble() %>%
-            mutate(i = row_number()) %>%
-            pivot_longer(
-              cols = -i,
-              names_to = "variable",
-              values_to = "value"
-            ) %>%
-            mutate(Yvar = Yvar)
-        },
-        boot = boot
-      ) %>%
-      mutate(
-        variable = variable %>% factor(., levels = input_var$variable),
-        Yvar = Yvar %>% factor(., levels = all_Y_vars)
-      )
+    if ("boot_mbplsda" %in% class(boot)) {
+      boot_summary <-
+        purrr::map(
+          .x = Yvars,
+          .f = function(Yvar, boot){
+            boot$XYcoef[[Yvar]] %>%
+              dplyr::select(variables, block, Q2.5, Q97.5) %>%
+              dplyr::rename(variable = variables, lo = Q2.5, up = Q97.5) %>%
+              dplyr::mutate(
+                variable = variable %>% factor(., levels = input_var$variable),
+                block = block %>% factor(., levels = input_var$block %>% levels()),
+                Yvar = Yvar
+              )
+          },
+          boot = boot
+        ) %>%
+        purrr::list_rbind()
 
-    boot_summary <-
-      boot_res %>%
-      group_by(variable, Yvar) %>%
-      summarize(
-        lo = quantile(value, p = (1-CI)/2),
-        up = quantile(value, p = CI + (1-CI)/2),
-        p = abs(sum(value > 0) - sum(value < 0))/n(),
-        .groups = "drop"
-      )
+    } else {
+
+      boot_res <-
+        purrr::map_dfr(
+          .x = Yvars,
+          .f = function(Yvar, boot) {
+            boot$XYcoef[[Yvar]]$boot %>%
+              as_tibble() %>%
+              mutate(i = row_number()) %>%
+              pivot_longer(
+                cols = -i,
+                names_to = "variable",
+                values_to = "value"
+              ) %>%
+              mutate(Yvar = Yvar)
+          },
+          boot = boot
+        ) %>%
+        mutate(
+          variable = variable %>% factor(., levels = input_var$variable),
+          Yvar = Yvar %>% factor(., levels = all_Y_vars)
+        )
+
+      boot_summary <-
+        boot_res %>%
+        group_by(variable, Yvar) %>%
+        summarize(
+          lo = quantile(value, p = (1-CI)/2),
+          up = quantile(value, p = CI + (1-CI)/2),
+          p = abs(sum(value > 0) - sum(value < 0))/n(),
+          .groups = "drop"
+        )
+    }
+
     coefs <- coefs %>% left_join(boot_summary, by = join_by(variable, Yvar))
   }
 
