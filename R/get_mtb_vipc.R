@@ -15,11 +15,8 @@
 get_mtb_vipc <- function(res, boot = NULL, CI = 0.95) {
 
   input_var <- blocks_and_variables(res)
-  if ("mbplsda" %in% class(res))  {
-    nf <- ifelse(is.null(boot), res$nf, length(boot$faX))
-  } else {
-    nf <- ifelse(is.null(boot), res$nf, which.min(abs(boot$bipc$obs[1] - res$bipc[1,])))
-  }
+  nf <- retrieve_nf(res = res, boot = boot)
+
   vipc <-
     tibble(variable = rownames(res$vipc), value = res$vipc[,nf]) %>%
     mutate(

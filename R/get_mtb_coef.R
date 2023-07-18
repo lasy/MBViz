@@ -31,7 +31,7 @@ get_mtb_coef <- function(res, boot = NULL, Y_var = NULL, CI = 0.95, as_matrix = 
     else stop("Y_var indices must be in 1:ncol(Y)\n")
   } else stop("Y_var must be a character or integer (vector).")
 
-  nf <- ifelse(is.null(boot), res$nf, which.min(abs(boot$XYcoef[[1]]$obs[1] - res$XYcoef[[1]][1,])))
+  nf <- retrieve_nf(res, boot)
 
   coefs <-
     purrr::map(
