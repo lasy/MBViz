@@ -108,6 +108,10 @@ get_mtb_coef <- function(res, boot = NULL, Y_var = NULL, CI = 0.95, as_matrix = 
     coefs <- coefs %>% left_join(boot_summary, by = join_by(variable, block, Yvar))
   }
 
+  coefs <-
+    coefs %>%
+    dplyr::mutate(Yvar = Yvar %>% factor(., levels = all_Y_vars))
+
   if (as_matrix) {
     coefs <-
       coefs %>%
