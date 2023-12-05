@@ -18,6 +18,7 @@
 plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95, wrap_block_names = TRUE) {
 
   bipc <- get_mtb_bipc(res = res, boot = boot, CI = CI)
+
   if (is.null(boot)) bipc <- bipc %>% mutate(lo = 0, up = value)
   if (wrap_block_names)
     bipc <- bipc %>% mutate(x = pretty_block)

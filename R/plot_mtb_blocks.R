@@ -14,6 +14,8 @@
 #' for the title (default is `"\n"`).
 #' @param add_n (optional) a `logical` specifying if the number of samples should
 #' be specified on the y-axis (default is `TRUE`)
+#' @param block_colors (optional) a `character` vector specifying the colors of
+#' the explanatory blocks. If `NULL` (default), the colors are the default ggplot colors.
 #'
 #' @return a `ggplot2` object
 #' @export
@@ -22,7 +24,8 @@
 #' @importFrom stringr str_c str_length
 plot_mtb_blocks <- function(Xs, Y, response_first = FALSE,
                             min_text_size = 3, max_text_size = 4,
-                            title_sep = "\n", add_n = TRUE){
+                            title_sep = "\n", add_n = TRUE,
+                            block_colors = NULL){
   Xs_vars <- .blocks_and_variables_from_list(Xs)
   Y_vars <- .blocks_and_variables_from_list(Y)
   text_size_range <- range(str_length(c(Xs_vars$variable, Y_vars$variable)))
@@ -34,6 +37,14 @@ plot_mtb_blocks <- function(Xs, Y, response_first = FALSE,
       text_size_range = text_size_range
       ) +
     ggtitle(str_c("Explanatory", title_sep,"variables"))
+
+  if (!is.null(block_colors)) {
+    g_Xs <-
+      g_Xs +
+      scale_color_manual(values = block_colors) +
+      scale_fill_manual(values = block_colors)
+  }
+
   g_Y <-
     .plot_mtb_blocks(
       Y_vars,

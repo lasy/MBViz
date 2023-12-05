@@ -1,7 +1,7 @@
 
 #' Predict Y from an `ade4::mbpls` model
 #'
-#' @param res the output of an `ade4::mbpls` call
+#' @param res the output of an `ade4::mbpls` or `packMBPLSDA::mbplsda` call
 #' @param newdata (optional) an `ade4::ktab` object - similar to what would be
 #' provided as input of `ade4::mbpls`.
 #' If `newdata` is not provided, the predictions for the original data are provided.
@@ -28,9 +28,12 @@ mtb_predict <- function(res, original_Y = NULL, newdata = NULL, original_X = NUL
         predict(., newdata = tibble(actual_X = newX[,Xvar]))
     }
   }
+
+
   newX <- newX %>% as.matrix()
 
   coefs <- get_mtb_coef(res = res, as_matrix = TRUE)
+
   Y_hat <- newX %*% coefs
 
   # linear transformation to go from the predicted Y to the original Y
