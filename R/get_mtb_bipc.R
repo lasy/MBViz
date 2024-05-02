@@ -4,7 +4,6 @@
 #' @param res the output of `ade4::mbpls` (or `ade4::mbpcaiv`)
 #' @param boot (optional) the output of `ade4::randboot`
 #' @param CI The confidence interval that should be displayed. Default is 0.95.
-#' @param wrap_block_names (optional) `logical` specifying if block names (x-axis) should be wrapped. Default is `TRUE`.
 #'
 #' @return a `tibble` object
 #' @export
@@ -12,7 +11,7 @@
 #' @importFrom tidyr pivot_longer
 #' @importFrom dplyr as_tibble mutate select
 #' @importFrom stats quantile
-get_mtb_bipc <- function(res, boot = NULL, CI = 0.95){
+get_mtb_bipc <- function(res, boot = NULL, CI = 0.95, wrap_block_names){
 
   input_var <- blocks_and_variables(res)
   nf <- retrieve_nf(res = res, boot = boot)

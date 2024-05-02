@@ -28,6 +28,7 @@ plot_mtb_blocks <- function(Xs, Y, response_first = FALSE,
                             min_text_size = 3, max_text_size = 4,
                             title_sep = "\n", add_n = TRUE, add_p = TRUE,
                             block_colors = NULL){
+
   Xs_vars <- .blocks_and_variables_from_list(Xs)
   Y_vars <- .blocks_and_variables_from_list(Y)
   text_size_range <- range(str_length(c(Xs_vars$variable, Y_vars$variable)))
@@ -103,7 +104,7 @@ plot_mtb_blocks <- function(Xs, Y, response_first = FALSE,
     aes(x = variable, y = 1)) +
     geom_tile(aes(fill = block), col = "white", alpha = 0.2) +
     geom_text(aes(label = variable, col = block, size = -var_length), angle = 90) + #
-    facet_grid(. ~ pretty_block, scales = "free", space = "free") +
+    facet_grid(. ~ block, scales = "free", space = "free") +
     scale_x_discrete(ifelse(add_p, str_c(nrow(input_var)," var."),""), breaks = NULL) +
     scale_y_continuous(breaks = NULL) + ylab("") +
     scale_size(range = c(min_text_size, max_text_size), limits = lims) + #

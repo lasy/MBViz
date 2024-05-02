@@ -6,7 +6,8 @@
 #' @param show_dist (optional) a `logical` specifying if the bootstrap distribution should be shown with a boxplot.
 #' Default is FALSE
 #' @param CI The confidence interval that should be displayed. Default is 0.95.
-#' @param wrap_block_names (optional) `logical` specifying if block names (x-axis) should be wrapped. Default is `TRUE`.
+#' @param wrap_block_names (optional) `integer` specifying if the block names should be wrapped to the specified character length. Default is `NULL`, indicating no wrapping.
+#' @param show_ref (optional) a `logical` specifying if the reference value under the assumption of equal variable importance should be shown. Default is `TRUE`.
 #'
 #' @return a `ggplot2` object
 #' @export
@@ -14,23 +15,22 @@
 #' @importFrom tidyr pivot_longer replace_na
 #' @importFrom dplyr as_tibble mutate select
 #' @importFrom stats quantile
+#' @importFrom forcats fct_inorder
+#' @importFrom stringr str_wrap
 #' @import ggplot2
-plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95, wrap_block_names = TRUE) {
+plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95, show_ref = TRUE, wrap_block_names = NULL) {
 
   bipc <- get_mtb_bipc(res = res, boot = boot, CI = CI)
 
   if (is.null(boot)) bipc <- bipc %>% mutate(lo = 0, up = value)
-  if (wrap_block_names)
-    bipc <- bipc %>% mutate(x = pretty_block)
-  else
-    bipc <- bipc %>% mutate(x = block)
+  if (show_ref) bipc <- bipc |> left_join(get_ref_bipc(res = res), by = join_by(block))
+  if (!is.null(wrap_block_names))
+    bipc <- bipc |> arrange(block) |>  mutate(block = block |> stringr::str_wrap(wrap_block_names) |> forcats::fct_inorder())
 
   g_bipc <-
-    ggplot(bipc ,
-           aes(x = x, y = value)) +
+    ggplot(bipc, aes(x = block)) +
     geom_hline(yintercept = 0) +
-    geom_hline(yintercept = 1/nrow(bipc),
-               linetype = 3, col = "gray70") +
+    # geom_hline(yintercept = 1/nrow(bipc), linetype = 3, col = "gray70") +
     expand_limits(y = 0) +
     guides(fill = "none", col = "none") +
     xlab("") +
@@ -51,12 +51,21 @@ plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95, wrap_b
     g_bipc <-
       g_bipc +
       geom_segment(
-        aes(xend = x, y = lo, yend = up, col = block),
+        aes(xend = block, y = lo, yend = up, col = block),
         alpha = ifelse(is.null(boot), 1, 0.5),
         linewidth = ifelse(is.null(boot), 0.5, 2),
         lineend = "round"
-      ) +
-      geom_point(aes(col = block), size = 3)
+      )
+    if (show_ref) {
+      g_bipc <-
+        g_bipc +
+        geom_segment(
+          data = bipc |> mutate(x = block |> as.numeric()),
+          aes(x = x - 0.3, xend = x + 0.3, y = bipc_ref, yend = bipc_ref),
+          col = "gray50", linetype = 3, lineend = "round"
+        )
+    }
+    g_bipc <- g_bipc + geom_point(aes(y = value, col = block), size = 3)
   }
 
   g_bipc

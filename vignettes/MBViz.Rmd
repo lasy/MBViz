@@ -32,8 +32,9 @@ theme_set(theme_light())
 n <- 200 # number of observations
 p <- 3:5 # number of variables in each X block
 q <- 5 # number of variables in Y
-Xs <- matrix(rnorm(n * sum(p)), nrow = n, ncol = sum(p)) %>% as_blocks(., p = p)
+Xs <- matrix(rnorm(n * sum(p)), nrow = n, ncol = sum(p)) |> as_blocks(p = p)
 Y <- matrix(rnorm(n * q), nrow = n, ncol = q) %>% list(Y = .)
+
 
 plot_mtb_blocks(Xs = Xs, Y = Y)
 plot_mtb_data(Xs = Xs, Y = Y)
@@ -113,6 +114,21 @@ plot(Y_test_hat, Y_test$Y, pch = 16, cex = 0.5); abline(a = 0, b = 1)
 
 
 
+```{r}
+
+Y_hat <- 
+  mtb_predict(
+    res = res_mbplsda_success_endpoints_V4_Pl$res,
+    original_Y = res_mbplsda_success_endpoints_V4_Pl$output,
+    original_X = res_mbplsda_success_endpoints_V4_Pl$inputs |> ade4::ktab.list.df(),
+    newdata = res_mbplsda_success_endpoints_V4_LV$inputs |> ade4::ktab.list.df()
+    ) 
+
+```
+
+
+
+
 
 ### On the `chicken` data from the `ade4` package
 
@@ -138,6 +154,7 @@ res <-
   mbpls(
     dudiY = dudi.pca(Y$Mortality, scannf = FALSE, nf = 2),
     ktabX = ktab.list.df(Xs),
+    option = "none",
     scale = TRUE,
     scannf = FALSE, nf = 4
     )

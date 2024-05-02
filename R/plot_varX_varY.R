@@ -60,7 +60,6 @@ add_Y_vars_to_blocks_and_variables <- function(input_vars, Y) {
     input_vars %>%
     dplyr::mutate(
       block = block %>% forcats::fct_expand("Y"),
-      pretty_block = pretty_block %>% forcats::fct_expand("Y"),
       variable = variable %>% forcats::fct_expand(colnames(Y))
     )
   all_vars <-
@@ -68,8 +67,7 @@ add_Y_vars_to_blocks_and_variables <- function(input_vars, Y) {
     dplyr::bind_rows(
       dplyr::tibble(
         block = "Y" %>% factor(., levels = levels(all_vars$block)),
-        variable = colnames(Y) %>% factor(., levels = levels(all_vars$variable)),
-        pretty_block = "Y" %>% factor(., levels = levels(all_vars$pretty_block))
+        variable = colnames(Y) %>% factor(., levels = levels(all_vars$variable))
         )
     )
 }

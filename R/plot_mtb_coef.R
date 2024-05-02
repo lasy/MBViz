@@ -55,13 +55,13 @@ plot_mtb_coef <- function(res, boot = NULL, Y_var = NULL, CI = 0.95, format = "l
   if (format == "wide") {
     g <-
       g +
-      facet_grid(Yvar ~ pretty_block, scales = "free_x", space = "free_x") +
+      facet_grid(Yvar ~ block, scales = "free_x", space = "free_x") +
       theme(axis.text.x = element_text(angle = 45, hjust = 1))
   } else {
     g <-
       g +
       coord_flip() +
-      facet_grid(pretty_block ~ Yvar, scales = "free_y", space = "free_y")
+      facet_grid(block ~ Yvar, scales = "free_y", space = "free_y")
   }
 
   g

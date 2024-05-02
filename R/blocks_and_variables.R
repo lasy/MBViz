@@ -10,13 +10,9 @@
 #' @importFrom magrittr %>%
 blocks_and_variables <- function(res) {
   tibble(
-    block = rep(names(res$blo), res$blo) %>% factor(., levels = names(res$blo)),
-    variable = colnames(res$tabX) %>% factor(., levels = colnames(res$tabX))
-  ) %>%
-    mutate(
-      pretty_block = str_wrap(block, width = 12),
-      pretty_block = pretty_block %>% factor(., levels = unique(pretty_block))
-    )
+    block = rep(names(res$blo), res$blo) |> factor(levels = names(res$blo)),
+    variable = colnames(res$tabX) |> factor(levels = colnames(res$tabX))
+  )
 }
 
 
@@ -39,12 +35,10 @@ blocks_and_variables <- function(res) {
       tibble(block = input, variable = variables)
     },
     inputs = inputs
-  ) %>%
+  ) |>
     mutate(
-      block = block %>% factor(., levels = unique(block)),
-      variable = variable %>% factor(., levels = unique(variable)),
-      pretty_block = str_wrap(block, width = 12),
-      pretty_block = pretty_block %>% factor(., levels = unique(pretty_block))
+      block = block |> factor(levels = unique(block)),
+      variable = variable |> factor(levels = unique(variable))
     )
 }
 
