@@ -39,5 +39,6 @@ get_ref_vipc <- function(res){
         bipc =  res$bipc |> extract(,ncol(res$bipc))
       ), by = join_by(block)
     ) |>
-    mutate(vipc_ref = v * bipc^2/sum(v * bipc^2))
+    mutate(vipc_ref = v * bipc/sum(v * bipc))
+    # mutate(vipc_ref = v * bipc^2/sum(v * bipc^2))
 }
