@@ -27,7 +27,7 @@ theme_set(theme_light())
  
 ### On simulated data
 
-```{r}
+```{r simulated-data, fig.width = 10, fig.height = 5}
 
 n <- 200 # number of observations
 p <- 3:5 # number of variables in each X block
@@ -42,7 +42,7 @@ plot_mtb_data(Xs = Xs, Y = Y)
 ```
 
 
-```{r}
+```{r pls-A, fig.width = 10, fig.height = 10}
 
 PLS_A <- mbpls(
   dudiY = dudi.pca(df = Y$Y, scannf = FALSE, nf = 2),
@@ -114,20 +114,6 @@ plot(Y_test_hat, Y_test$Y, pch = 16, cex = 0.5); abline(a = 0, b = 1)
 
 
 
-```{r}
-
-Y_hat <- 
-  mtb_predict(
-    res = res_mbplsda_success_endpoints_V4_Pl$res,
-    original_Y = res_mbplsda_success_endpoints_V4_Pl$output,
-    original_X = res_mbplsda_success_endpoints_V4_Pl$inputs |> ade4::ktab.list.df(),
-    newdata = res_mbplsda_success_endpoints_V4_LV$inputs |> ade4::ktab.list.df()
-    ) 
-
-```
-
-
-
 
 
 ### On the `chicken` data from the `ade4` package
@@ -138,13 +124,13 @@ data("chickenk")
 
 ```
 
-```{r}
+```{r chicken-blocks, fig.width = 10, fig.height = 5}
 Y <- chickenk[1] # Mortality
 Xs <- chickenk[2:5]
 plot_mtb_blocks(Xs = Xs , Y = Y)
 ```
 
-```{r}
+```{r chicken-data, fig.width = 10, fig.height = 5}
 plot_mtb_data(Xs = Xs, Y = Y)
 ```
 
@@ -207,7 +193,7 @@ plot_mtb_Xloadings(res)
 
 ```
 
-```{r}
+```{r mbpls-chicken, fig.width = 10, fig.height = 10}
 
 plot_mtb(res)
 
@@ -228,9 +214,8 @@ plot_varX_varY(res = res, varX = "NbChick", varY = "Condemn")
 
 
 set.seed(123456)
-test_res <- testdim(res, nrepet = 199, optdim = 4)
+test_res <- testdim(res, nrepet = 20, optdim = 4)
 boot <- randboot(res, nrepet = 100, optdim = res$nf)
-
 
 ```
 
@@ -279,7 +264,7 @@ res <-
 ```
 
 
-```{r}
+```{r mbplsda-simulated, fig.width = 10, fig.height = 10}
 
 plot_mtb(res, samples_color = A$Y)
 

@@ -4,7 +4,7 @@
 \alias{plot_mtb_vipc}
 \title{Plots the observed (and bootstrapped) cumulative Variable Importance in Projection (VIPC)}
 \usage{
-plot_mtb_vipc(res, boot = NULL, CI = 0.95)
+plot_mtb_vipc(res, boot = NULL, CI = 0.95, show_ref = TRUE)
 }
 \arguments{
 \item{res}{the output of `ade4::mbpls` (or `ade4::mbpcaiv`)}
@@ -12,6 +12,8 @@ plot_mtb_vipc(res, boot = NULL, CI = 0.95)
 \item{boot}{(optional) the output of `ade4::randboot`}
 
 \item{CI}{(optional) The width of the confidence interval that should be displayed. Default is 0.95.}
+
+\item{show_ref}{(optional) a `logical` specifying if the reference value under the assumption of equal variable importance within blocks should be shown. Default is `TRUE`.}
 }
 \value{
 a `ggplot2` object

@@ -11,7 +11,9 @@ plot_mtb_blocks(
   min_text_size = 3,
   max_text_size = 4,
   title_sep = "\\n",
-  add_n = TRUE
+  add_n = TRUE,
+  add_p = TRUE,
+  block_colors = NULL
 )
 }
 \arguments{
@@ -34,6 +36,12 @@ for the title (default is `"\n"`).}
 
 \item{add_n}{(optional) a `logical` specifying if the number of samples should
 be specified on the y-axis (default is `TRUE`)}
+
+\item{add_p}{(optional) a `logical` specifying if the number of variables should
+be specified on the x-axis (default is `TRUE`)}
+
+\item{block_colors}{(optional) a `character` vector specifying the colors of
+the explanatory blocks. If `NULL` (default), the colors are the default ggplot colors.}
 }
 \value{
 a `ggplot2` object

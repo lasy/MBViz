@@ -7,7 +7,7 @@
 mtb_predict(res, original_Y = NULL, newdata = NULL, original_X = NULL)
 }
 \arguments{
-\item{res}{the output of an `ade4::mbpls` call}
+\item{res}{the output of an `ade4::mbpls` or `packMBPLSDA::mbplsda` call}
 
 \item{original_Y}{(optional) the `matrix` or `data.frame` that was provided to the `res` model.
 If not provided, the predictions will be centered and scaled.}

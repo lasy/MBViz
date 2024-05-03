@@ -9,7 +9,8 @@ plot_mtb_bipc(
   boot = NULL,
   show_dist = FALSE,
   CI = 0.95,
-  wrap_block_names = TRUE
+  show_ref = TRUE,
+  wrap_block_names = NULL
 )
 }
 \arguments{
@@ -22,7 +23,9 @@ Default is FALSE}
 
 \item{CI}{The confidence interval that should be displayed. Default is 0.95.}
 
-\item{wrap_block_names}{(optional) `logical` specifying if block names (x-axis) should be wrapped. Default is `TRUE`.}
+\item{show_ref}{(optional) a `logical` specifying if the reference value under the assumption of equal variable importance should be shown. Default is `TRUE`.}
+
+\item{wrap_block_names}{(optional) `integer` specifying if the block names should be wrapped to the specified character length. Default is `NULL`, indicating no wrapping.}
 }
 \value{
 a `ggplot2` object

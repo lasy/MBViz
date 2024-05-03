@@ -8,7 +8,8 @@
   input_var,
   min_text_size = 3,
   max_text_size = 4,
-  text_size_range
+  text_size_range,
+  add_p = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,9 @@ for the block variable text size.}
 
 \item{text_size_range}{a `vector` of two integers specifying the lengths of
 the shortest and longuest variable name}
+
+\item{add_p}{(optional) a `logical` specifying if the number of variables should
+be specified on the x-axis (default is `TRUE`)}
 }
 \value{
 a `ggplot2` object
