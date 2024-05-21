@@ -30,7 +30,7 @@ plot_mtb_eig <- function(res, xaxis = NULL, yaxis = NULL, annot = TRUE, title = 
     )
 
   color_breaks <- c("axes shown", "latent axes", "other axes")
-  color_values <- c("black", "gray55", "gray90")
+  color_values <- c("black", "gray35", "gray70")
   xlim <- c(0.5, nrow(eigenvalues) + 0.5)
 
   g_eig <-
@@ -39,7 +39,7 @@ plot_mtb_eig <- function(res, xaxis = NULL, yaxis = NULL, annot = TRUE, title = 
     ylab("Eigenvalues") +
     guides(fill = "none") +
     scale_fill_manual(breaks = color_breaks, values = color_values) +
-    xlab("Axes") +
+    xlab("Latent component") +
     xlim(xlim)
 
   g_cum_var <-
@@ -48,7 +48,7 @@ plot_mtb_eig <- function(res, xaxis = NULL, yaxis = NULL, annot = TRUE, title = 
     ylab("Cummulative\nprojected inertia (%)") +
     guides(fill = "none")  +
     scale_fill_manual(breaks = color_breaks, values = color_values) +
-    xlab("Axes") +
+    xlab("Latent component") +
     xlim(xlim)
 
   if (annot) {

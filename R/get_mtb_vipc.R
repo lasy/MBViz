@@ -30,7 +30,7 @@ get_mtb_vipc <- function(res, boot = NULL, CI = 0.95) {
         vipc %>%
         left_join(
           boot$vipc %>%
-            dplyr::select(variables, block, Q2.5, Q97.5) %>%
+            dplyr::select(variables, block, Q2.5, Q97.5, median, mean, sd) %>%
             dplyr::rename(variable = variables, lo = Q2.5, up = Q97.5) %>%
             dplyr::mutate(
               variable = variable %>% factor(., levels = input_var$variable),
