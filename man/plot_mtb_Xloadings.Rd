@@ -4,7 +4,14 @@
 \alias{plot_mtb_Xloadings}
 \title{Plot the variables loading}
 \usage{
-plot_mtb_Xloadings(res, input_var, xaxis = 1, yaxis = 2, scale_axes = "eig")
+plot_mtb_Xloadings(
+  res,
+  xaxis = 1,
+  yaxis = 2,
+  scale_axes = "eig",
+  VIP = FALSE,
+  boot = NULL
+)
 }
 \arguments{
 \item{res}{the output of `ade4::mbpls` or `ade4::mbpcaiv`}
@@ -14,6 +21,13 @@ plot_mtb_Xloadings(res, input_var, xaxis = 1, yaxis = 2, scale_axes = "eig")
 \item{yaxis}{an `integer` specifying which latent variable should be plotted on the y-axis. Default is 1.}
 
 \item{scale_axes}{how the aspect ratio between the x-axis and y-axis should be computed (default is "fixed", other option is "eig"). XXX explain better XXX}
+
+\item{VIP}{a `logical` indicating whether to only include the important variables (`TRUE`) or all variables (`FALSE`).
+Default is `FALSE`.
+Variables are deemed important if the ratio between their `vipc` and their "reference" `vipc` is larger than 1.}
+
+\item{boot}{the output of `ade::boot` or `packMBPLSDA::boot` from the corresponding model (`res`).
+If provided, variables are deemed important if the lower bound of their 95% confidence interval is larger than 1/20th of the reference VIPC.}
 }
 \value{
 a `ggplot2` object
