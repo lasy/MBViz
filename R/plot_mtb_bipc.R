@@ -18,7 +18,7 @@
 #' @importFrom forcats fct_inorder
 #' @importFrom stringr str_wrap
 #' @import ggplot2
-plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95, show_ref = TRUE, wrap_block_names = NULL) {
+plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95, show_ref = TRUE, show_ref_ratio = FALSE, wrap_block_names = NULL) {
 
   bipc <- get_mtb_bipc(res = res, boot = boot, CI = CI)
 
@@ -27,6 +27,13 @@ plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95, show_r
   if (!is.null(wrap_block_names))
     bipc <- bipc |> arrange(block) |>  mutate(block = block |> stringr::str_wrap(wrap_block_names) |> forcats::fct_inorder())
 
+  ylab <- "Cummulative\nBlock Importance"
+
+  if (show_ref_ratio) {
+    bipc <- bipc |> mutate(value = value / bipc_ref, lo = lo / bipc_ref, up = up / bipc_ref)
+    ylab <- str_c("Relative\n", ylab)
+  }
+
   g_bipc <-
     ggplot(bipc, aes(x = block)) +
     geom_hline(yintercept = 0) +
@@ -34,9 +41,14 @@ plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95, show_r
     expand_limits(y = 0) +
     guides(fill = "none", col = "none") +
     xlab("") +
-    ylab("Cummulative\nBlock Importance") +
+    ylab(ylab) +
     scale_y_continuous(expand = expansion(mult = c(0, .1))) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  if (show_ref_ratio) {
+    g_bipc <- g_bipc +
+      geom_hline(yintercept = 1, linetype = 3, col = "gray70")
+  }
 
   if (show_dist) {
     g_bipc <-
@@ -56,7 +68,7 @@ plot_mtb_bipc <- function(res, boot = NULL, show_dist = FALSE, CI = 0.95, show_r
         linewidth = ifelse(is.null(boot), 0.5, 2),
         lineend = "round"
       )
-    if (show_ref) {
+    if (show_ref & ! show_ref_ratio) {
       g_bipc <-
         g_bipc +
         geom_segment(

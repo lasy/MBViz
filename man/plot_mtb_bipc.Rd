@@ -10,6 +10,7 @@ plot_mtb_bipc(
   show_dist = FALSE,
   CI = 0.95,
   show_ref = TRUE,
+  show_ref_ratio = FALSE,
   wrap_block_names = NULL
 )
 }

@@ -31,13 +31,18 @@ plot_mtb_lX <- function(res, xaxis = 1, yaxis = 2, scale_axes = "eig", samples_c
     asp <- 1
   }
 
+  inertia_values <- get_mtb_eig(res)
+
+  xaxis_label <- str_c('Axis ',xaxis, " (", (100 * inertia_values$var[xaxis]) |> round(), "% of total inertia)")
+  yaxis_label <- str_c('Axis ',yaxis, " (", (100 * inertia_values$var[yaxis]) |> round(), "% of total inertia)")
+
   g <-
     ggplot(Xrow, aes(x = xaxis, y = yaxis)) +
     geom_vline(xintercept = 0, col = "gray50") +
     geom_hline(yintercept = 0, col = "gray50") +
     coord_fixed(ratio = asp) +
-    xlab(str_c('Axis ',xaxis)) +
-    ylab(str_c("Axis ",yaxis))
+    xlab(xaxis_label) +
+    ylab(yaxis_label)
 
   if (!is.null(samples_color)) {
     if (all(Xrow$value == 1)) {
