@@ -1,3 +1,13 @@
+#' Add colors to a data frame
+#'
+#' @param X a `data.frame`
+#' @param sample_color a `vector` or a `data.frame` with the colors of the samples
+#'
+#' @return a `data.frame` object
+#' @export
+#'
+#' @importFrom dplyr mutate left_join join_by
+#' @importFrom tidyr pivot_longer
 .add_colors <- function(X, samples_color) {
   if (!is.null(samples_color)) {
     if (
